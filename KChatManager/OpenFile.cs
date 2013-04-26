@@ -9,17 +9,11 @@ using System.Windows.Forms;
 
 namespace KChatManager
 {
-    public partial class Main : Form
+    public partial class OpenFile : Form
     {
-        public Main()
+        public OpenFile()
         {
             InitializeComponent();
-        }
-
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFile openFileForm = new OpenFile();
-            openFileForm.Show();
         }
     }
 }
