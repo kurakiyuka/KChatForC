@@ -15,5 +15,21 @@ namespace KChatManager
         {
             InitializeComponent();
         }
+
+        private void browseToChooseChatFile_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog selectChatFile = new OpenFileDialog();
+            selectChatFile.Title = "Select Chat File";          
+            selectChatFile.Filter = "Supported Files (*.mht;*.txt;*.xml)|*.mht;*.txt;*.xml|All Files(*.*)|*.*";
+            if (selectChatFile.ShowDialog() == DialogResult.OK)
+            {
+                chatFileDirectory.Text = selectChatFile.FileName;
+            }
+        }
+
+        private void createKChatFile_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

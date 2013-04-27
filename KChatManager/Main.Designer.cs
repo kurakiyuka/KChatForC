@@ -126,7 +126,6 @@
             this.mainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
@@ -140,10 +139,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem aboutKChatManagerToolStripMenuItem;
-
-
-
-
     }
 }
 
