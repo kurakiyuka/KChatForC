@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.kChatFileFolderDirectory = new System.Windows.Forms.TextBox();
             this.browseKChatFileFolder = new System.Windows.Forms.Button();
             this.saveKChatFileFolder = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // kChatFileFolderDirectory
             // 
-            this.textBox1.Location = new System.Drawing.Point(24, 45);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(331, 25);
-            this.textBox1.TabIndex = 0;
+            this.kChatFileFolderDirectory.BackColor = System.Drawing.SystemColors.Window;
+            this.kChatFileFolderDirectory.Location = new System.Drawing.Point(24, 45);
+            this.kChatFileFolderDirectory.Name = "kChatFileFolderDirectory";
+            this.kChatFileFolderDirectory.ReadOnly = true;
+            this.kChatFileFolderDirectory.Size = new System.Drawing.Size(331, 25);
+            this.kChatFileFolderDirectory.TabIndex = 0;
             // 
             // browseKChatFileFolder
             // 
@@ -48,6 +50,7 @@
             this.browseKChatFileFolder.TabIndex = 1;
             this.browseKChatFileFolder.Text = "Browse";
             this.browseKChatFileFolder.UseVisualStyleBackColor = true;
+            this.browseKChatFileFolder.Click += new System.EventHandler(this.browseKChatFileFolder_Click);
             // 
             // saveKChatFileFolder
             // 
@@ -57,6 +60,7 @@
             this.saveKChatFileFolder.TabIndex = 2;
             this.saveKChatFileFolder.Text = "Save";
             this.saveKChatFileFolder.UseVisualStyleBackColor = true;
+            this.saveKChatFileFolder.Click += new System.EventHandler(this.saveKChatFileFolder_Click);
             // 
             // FirstUse
             // 
@@ -66,10 +70,10 @@
             this.ClientSize = new System.Drawing.Size(494, 172);
             this.Controls.Add(this.saveKChatFileFolder);
             this.Controls.Add(this.browseKChatFileFolder);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.kChatFileFolderDirectory);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FirstUse";
@@ -82,7 +86,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox kChatFileFolderDirectory;
         private System.Windows.Forms.Button browseKChatFileFolder;
         private System.Windows.Forms.Button saveKChatFileFolder;
     }
