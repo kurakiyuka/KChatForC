@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.IO;
-using System.Text;
 using System.Xml;
 
 namespace KChatManager
 {
     public partial class FirstUse : Form
     {
-        byte[] byData;
-        char[] charData;
+        private String kChatFileFolderPath;
 
         public FirstUse()
         {
@@ -22,40 +20,47 @@ namespace KChatManager
             selectKChatFileFolder.Description = "Select The Folder For Storing KChat Files";
             if (selectKChatFileFolder.ShowDialog() == DialogResult.OK)
             {
-                kChatFileFolderDirectory.Text = selectKChatFileFolder.SelectedPath + "KChatManager\\";
+                kChatFileFolder_txt.Text = selectKChatFileFolder.SelectedPath + "KChatManager\\";
+                kChatFileFolderPath = kChatFileFolder_txt.Text;
             }
         }
 
         private void saveKChatFileFolder_Click(object sender, EventArgs e)
         {
-            //Format Config File Content XML
-            String config = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Config><Directory>" + kChatFileFolderDirectory.Text + "</Directory></Config>";
-
-            //Create Config File Folder
-            String configFileFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager";
-            if (!Directory.Exists(configFileFolderPath))
+            if (kChatFileFolderPath == "" || kChatFileFolderPath == null)
             {
-                Directory.CreateDirectory(configFileFolderPath);
+                MessageBox.Show("Please Select the Folder For Storing KChat Files", "Alert");
             }
-
-            //Write Config File
-            try
+            else
             {
-                FileStream configFileStream = new FileStream(configFileFolderPath + "\\config.xml", FileMode.Create);
-                charData = config.ToCharArray();
-                byData = new byte[charData.Length];
-                Encoder en = Encoding.UTF8.GetEncoder();
-                en.GetBytes(charData, 0, charData.Length, byData, 0, true);
+                //Create Config File Folder
+                String configFileFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager";
+                if (!Directory.Exists(configFileFolderPath))
+                {
+                    Directory.CreateDirectory(configFileFolderPath);
+                }
 
-                configFileStream.Seek(0, SeekOrigin.Begin);
-                configFileStream.Write(byData, 0, byData.Length);
+                //Write Config File
+                try
+                {
+                    XmlWriterSettings xmlSets = new XmlWriterSettings();
+                    xmlSets.Indent = true;
+                    xmlSets.IndentChars = ("    ");
 
-                this.Close();
-            }
-            catch (IOException ex)
-            {
-                MessageBox.Show(ex.ToString());
-                return;
+                    XmlWriter configFileWriter = XmlWriter.Create(configFileFolderPath + "\\config.xml", xmlSets);
+                    configFileWriter.WriteStartElement("Config");
+                    configFileWriter.WriteElementString("Directory", kChatFileFolderPath);
+                    configFileWriter.WriteEndElement();
+                    configFileWriter.Flush();
+
+                    this.Close();
+                }
+
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "IOError");
+                    return;
+                }
             }
         }
     }
