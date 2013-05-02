@@ -7,7 +7,7 @@ namespace KChatManager
 {
     public partial class FirstUse : Form
     {
-        private String kChatFileFolderPath;
+        private String _kChatFileFolderPath;
 
         public FirstUse()
         {
@@ -21,13 +21,13 @@ namespace KChatManager
             if (selectKChatFileFolder.ShowDialog() == DialogResult.OK)
             {
                 kChatFileFolder_txt.Text = selectKChatFileFolder.SelectedPath + "KChatManager\\";
-                kChatFileFolderPath = kChatFileFolder_txt.Text;
+                _kChatFileFolderPath = kChatFileFolder_txt.Text;
             }
         }
 
         private void saveKChatFileFolder_Click(object sender, EventArgs e)
         {
-            if (kChatFileFolderPath == "" || kChatFileFolderPath == null)
+            if (_kChatFileFolderPath == "" || _kChatFileFolderPath == null)
             {
                 MessageBox.Show("Please Select the Folder For Storing KChat Files", "Alert");
             }
@@ -49,7 +49,7 @@ namespace KChatManager
 
                     XmlWriter configFileWriter = XmlWriter.Create(configFileFolderPath + "\\config.xml", xmlSets);
                     configFileWriter.WriteStartElement("Config");
-                    configFileWriter.WriteElementString("Directory", kChatFileFolderPath);
+                    configFileWriter.WriteElementString("Directory", _kChatFileFolderPath);
                     configFileWriter.WriteEndElement();
                     configFileWriter.Flush();
 

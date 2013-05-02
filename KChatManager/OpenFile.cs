@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 
 namespace KChatManager
 {
     public partial class OpenFile : Form
     {
+        private String _chatFilePath;
+        private String _allContent;
+
         public OpenFile()
         {
             InitializeComponent();
@@ -23,13 +22,25 @@ namespace KChatManager
             selectChatFile.Filter = "Supported Files (*.mht;*.txt;*.xml)|*.mht;*.txt;*.xml|All Files(*.*)|*.*";
             if (selectChatFile.ShowDialog() == DialogResult.OK)
             {
-                chatFileDirectory.Text = selectChatFile.FileName;
+                chatFileDirectory_txt.Text = selectChatFile.FileName;
+                _chatFilePath = chatFileDirectory_txt.Text;
             }
         }
 
         private void createKChatFile_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                StreamReader fileStream = new StreamReader(_chatFilePath, Encoding.Default);
+                _allContent = fileStream.ReadToEnd();
+                MessageBox.Show(_allContent);
+                fileStream.Close();
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString(), "IOError");
+                return;
+            }
         }
     }
 }
