@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace KChatManager
 {
@@ -12,6 +13,7 @@ namespace KChatManager
         private String _chatFilePath;
         private String _allContent;
         private String _contact;
+        private XmlDocument _resultXML;
 
         public OpenFile()
         {
@@ -44,12 +46,26 @@ namespace KChatManager
                 return;
             }
 
-            int indexOfBody = _allContent.IndexOf("<body>");
-            int indexOfBodyEnd = _allContent.IndexOf("</html>");
+            _resultXML = new XmlDocument();
+            XmlElement root = _resultXML.CreateElement("kchat");
+            _resultXML.AppendChild(root);
 
-            String _allWordsContent = _allContent.Substring(indexOfBody, indexOfBodyEnd - indexOfBody);
+            String _allWordsContent = _allContent.getWordsBetween("<body>", true, "</html>", true);
             String[] _allWordsArray = Regex.Split(_allWordsContent, "</tr>", RegexOptions.IgnoreCase);
             _contact = _allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
+            root.SetAttribute("contact", _contact);
+
+            //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
+            for (int i = 4; i < _allWordsArray.Length; i++)
+            {
+                if (_allWordsArray[i].isDate())
+                {
+                    String date = _allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
+                    XmlElement dateEle = _resultXML.CreateElement("day");
+                    dateEle.SetAttribute("day", date);
+                    root.AppendChild(dateEle);
+                }
+            }
         }
     }
 }
