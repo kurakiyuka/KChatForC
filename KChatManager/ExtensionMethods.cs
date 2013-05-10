@@ -63,5 +63,17 @@ namespace KChatManager
                 return originalDateArray[0] + '-' + originalDateArray[1] + '-' + originalDateArray[2];
             }
         }
+
+        public static String formatSpeaker(this String str)
+        {
+            if(str == "&nbsp;")
+			{
+				return "system";
+			}
+            else
+            {
+			    return str;
+            }
+        }
     }
 }
