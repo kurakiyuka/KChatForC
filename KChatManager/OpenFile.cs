@@ -10,13 +10,15 @@ namespace KChatManager
 {
     public partial class OpenFile : Form
     {
+        private String _kChatFileFolderPath;
         private String _chatFilePath;
         private String _allContent;
         private String _contact;
         private XmlDocument _resultXML;
 
-        public OpenFile()
+        public OpenFile(String path)
         {
+            _kChatFileFolderPath = path;
             InitializeComponent();
         }
 
@@ -47,6 +49,8 @@ namespace KChatManager
             }
 
             _resultXML = new XmlDocument();
+            XmlNode declarationNode = _resultXML.CreateNode(XmlNodeType.XmlDeclaration, "", "");            
+            _resultXML.AppendChild(declarationNode);
             XmlElement root = _resultXML.CreateElement("kchat");
             _resultXML.AppendChild(root);
 
@@ -56,7 +60,7 @@ namespace KChatManager
             root.SetAttribute("contact", _contact);
 
             //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
-            for (int i = 4; i < _allWordsArray.Length; i++)
+            for (int i = 4; i < _allWordsArray.Length - 1; i++)
             {
                 /*
 			    * there are two types of elements: Date and Chat Log
@@ -91,8 +95,37 @@ namespace KChatManager
 
                     //get speaker's name from the first item of the array, if blank, means this is a system info
                     String speaker = msgEleArray[0].Substring(msgEleArray[0].LastIndexOf(">") + 1).formatSpeaker();
+
+                    //get speak time from the second item of the array
+                    String time = msgEleArray[1];
+
+                    //get speak content and font from the third item of the array
+                    //not complete
+                    String content = msgEleArray[2].getWordsBetween("'>", false, "<", false);
+
+                    XmlElement msgEle = _resultXML.CreateElement("msg");
+                    msgEle.SetAttribute("time", time);
+                    msgEle.SetAttribute("speaker", speaker);
+                    msgEle.SetAttribute("from", "1");
+                    XmlElement pEle = _resultXML.CreateElement("p");
+                    pEle.InnerText = content;
+                    msgEle.AppendChild(pEle);
+
+                    root.LastChild.AppendChild(msgEle);
                 }
             }
-        }
-    }
+
+            try
+            {
+                _resultXML.Save(_kChatFileFolderPath + "//" + _contact + ".kchat");
+                MessageBox.Show("done");
+            }
+
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString(), "IOError");
+                return;
+            }
+        }//end function createKChatFile_Click
+    }//end class OpenFile
 }

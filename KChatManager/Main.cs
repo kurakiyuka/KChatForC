@@ -8,6 +8,7 @@ namespace KChatManager
     public partial class Main : Form
     {
         private String kChatFileFolderPath;
+        private String configFilePath;
 
         public Main()
         {
@@ -17,13 +18,14 @@ namespace KChatManager
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile openFileForm = new OpenFile();
+            OpenFile openFileForm = new OpenFile(kChatFileFolderPath);
             openFileForm.Show();
         }
 
         private void checkConfigFile()
         {
-            FileInfo configFile = new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager\\config.xml");
+            configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager\\config.xml";
+            FileInfo configFile = new FileInfo(configFilePath);
             if (configFile.Exists)
             {
                 readConfigFile();
@@ -37,7 +39,6 @@ namespace KChatManager
 
         private void readConfigFile()
         {
-            String configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager\\config.xml";
             try
             {
                 XmlReaderSettings xmlSets = new XmlReaderSettings();
