@@ -45,22 +45,35 @@ namespace KChatManager
 
         public static String formatDate(this String str)
         {
-            Char[] splitter = { '/' };
-            String[] originalDateArray = str.Split(splitter);
-            for (int i = 0; i <= 2; i++)
+            //some version of QQ display Date as YYYY-MM-DD
+            if (str.IndexOf("-") != -1)
             {
-                if (int.Parse(originalDateArray[i]) < 10)
-                {
-                    originalDateArray[i] = '0' + originalDateArray[i];
-                }
+                return str;
             }
-            if (int.Parse(originalDateArray[0]) < 100)
-            {
-                return originalDateArray[2] + '-' + originalDateArray[0] + '-' + originalDateArray[1];
-            }
+
+            //some version of QQ display Date as MM/DD/YYYY or YYYY/MM/DD, convert them into YYYY-MM-DD
             else
             {
-                return originalDateArray[0] + '-' + originalDateArray[1] + '-' + originalDateArray[2];
+                Char[] splitter = { '/' };
+                String[] originalDateArray = str.Split(splitter);
+                for (int i = 0; i <= 2; i++)
+                {
+                    // 3/15 -> 03/15
+                    if (originalDateArray[i].Length < 2)
+                    {
+                        originalDateArray[i] = '0' + originalDateArray[i];
+                    }
+                }
+                // 03/15/2013 -> 2013-03-15
+                if (originalDateArray[0].Length < 3)
+                {
+                    return originalDateArray[2] + '-' + originalDateArray[0] + '-' + originalDateArray[1];
+                }
+                // 2013/03/15 -> 2013-03-15
+                else
+                {
+                    return originalDateArray[0] + '-' + originalDateArray[1] + '-' + originalDateArray[2];
+                }
             }
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using KChatManager.Utils;
 
 namespace KChatManager
 {
@@ -55,7 +56,10 @@ namespace KChatManager
             _resultXML.AppendChild(root);
 
             String _allWordsContent = _allContent.getWordsBetween("<body>", true, "</html>", true);
+            String _allPicsContent = _allContent.getWordsBetween("</html>", true, "------=", false);
             String[] _allWordsArray = Regex.Split(_allWordsContent, "</tr>", RegexOptions.IgnoreCase);
+            String[] _allPicsArray = Regex.Split(_allPicsContent, "------=", RegexOptions.IgnoreCase);
+
             _contact = _allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
             root.SetAttribute("contact", _contact);
 
@@ -113,6 +117,16 @@ namespace KChatManager
 
                     root.LastChild.AppendChild(msgEle);
                 }
+            }
+
+            PicCreator picCreator = new PicCreator(_kChatFileFolderPath);
+            //first element is blank, so loop from j = 1
+            for (int j = 1; j < _allPicsArray.Length; j++)
+            {
+                String format = _allPicsArray[j].getWordsBetween("image/", true, "Content-Transfer", true).TrimEnd();
+                String location = _allPicsArray[j].getWordsBetween("n:{", true, "}.d", true);
+                String picCode = _allPicsArray[j].Substring(_allPicsArray[j].IndexOf(".dat") + 4).Trim();
+                picCreator.createPic(picCode, format);
             }
 
             try
