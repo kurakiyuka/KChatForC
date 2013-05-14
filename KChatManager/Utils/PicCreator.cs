@@ -10,8 +10,10 @@ namespace KChatManager.Utils
     {
         private String storePath;
 
+        //path是整个KChat工程的存储目录
         public PicCreator(String path)
         {
+            //图片被存放在总的存储目录下面的一个文件夹内，如果不存在，则先创建这个文件夹
             storePath = path + "Common Files\\images\\";
             if (!Directory.Exists(storePath))
             {
@@ -19,13 +21,19 @@ namespace KChatManager.Utils
             }
         }
 
-        public void createPic(String base64Code, String format)
+        public String createPic(String base64Code, String format)
         {
             try
             {
+                //将图片的base64代码进行Hash，把Hash结果作为文件名，再加上后缀名
                 String fileName = base64Code.GetHashCode().ToString();
-                fileName = storePath + "\\" + fileName + "." + format;
-                if (!File.Exists(fileName))
+                fileName = fileName + "." + format;
+
+                //生成图片的完整路径
+                String fileFullPath = storePath + "\\" + fileName + "." + format;
+
+                //如果图片还不存在，那么创建它，最后把图片文件名返回
+                if (!File.Exists(fileFullPath))
                 {
                     byte[] arr = Convert.FromBase64String(base64Code);
                     MemoryStream ms = new MemoryStream(arr, 0, arr.Length);
@@ -35,27 +43,29 @@ namespace KChatManager.Utils
                     switch (format)
                     {
                         case "jpeg":
-                            image.Save(fileName, ImageFormat.Jpeg);
+                            image.Save(fileFullPath, ImageFormat.Jpeg);
                             break;
                         case "gif":
-                            image.Save(fileName, ImageFormat.Gif);
+                            image.Save(fileFullPath, ImageFormat.Gif);
                             break;
                         case "png":
-                            image.Save(fileName, ImageFormat.Png);
+                            image.Save(fileFullPath, ImageFormat.Png);
                             break;
                         case "bmp":
-                            image.Save(fileName, ImageFormat.Bmp);
+                            image.Save(fileFullPath, ImageFormat.Bmp);
                             break;
                         default:
                             break;
                     }
                     ms.Close();
                 }
+
+                return fileName;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Error");
-                return;
+                return "Error Happened.";
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -50,7 +51,7 @@ namespace KChatManager
             }
 
             _resultXML = new XmlDocument();
-            XmlNode declarationNode = _resultXML.CreateNode(XmlNodeType.XmlDeclaration, "", "");            
+            XmlNode declarationNode = _resultXML.CreateNode(XmlNodeType.XmlDeclaration, "", "");
             _resultXML.AppendChild(declarationNode);
             XmlElement root = _resultXML.CreateElement("kchat");
             _resultXML.AppendChild(root);
@@ -91,7 +92,7 @@ namespace KChatManager
                 * <td><div style=...><div style=...>kurakiyuka
                 * 13:35:31
                 * <div style=...><font style=...>hello</font>
-                * </td></tr>
+                * </td>
                 */
                 else
                 {
@@ -103,30 +104,61 @@ namespace KChatManager
                     //get speak time from the second item of the array
                     String time = msgEleArray[1];
 
-                    //get speak content and font from the third item of the array
-                    //not complete
-                    String content = msgEleArray[2].getWordsBetween("'>", false, "<", false);
-
                     XmlElement msgEle = _resultXML.CreateElement("msg");
                     msgEle.SetAttribute("time", time);
                     msgEle.SetAttribute("speaker", speaker);
                     msgEle.SetAttribute("from", "1");
-                    XmlElement pEle = _resultXML.CreateElement("p");
-                    pEle.InnerText = content;
-                    msgEle.AppendChild(pEle);
+
+                    //get speak content and font from the third item of the array
+                    String[] contentArr = Regex.Split(msgEleArray[2], "><");
+
+                    foreach (String s in contentArr)
+                    {
+                        if (s.IndexOf("IMG") != -1)
+                        {
+                            String src = s.getWordsBetween("{", true, "}", false);
+                            XmlElement imgEle = _resultXML.CreateElement("img");
+                            imgEle.SetAttribute("src", src);
+                            msgEle.AppendChild(imgEle);
+                        }
+                        else if (s.IndexOf("font") != -1)
+                        {
+                            String p = s.getWordsBetween("'>", false, "<", false);
+                            XmlElement pEle = _resultXML.CreateElement("p");
+                            pEle.InnerText = p;
+                            msgEle.AppendChild(pEle);
+                        }
+                        else
+                        {
+                        }
+                    }
 
                     root.LastChild.AppendChild(msgEle);
                 }
             }
 
             PicCreator picCreator = new PicCreator(_kChatFileFolderPath);
+            List<string> picMappingList = new List<string>();
             //first element is blank, so loop from j = 1
             for (int j = 1; j < _allPicsArray.Length; j++)
             {
                 String format = _allPicsArray[j].getWordsBetween("image/", true, "Content-Transfer", true).TrimEnd();
                 String location = _allPicsArray[j].getWordsBetween("n:{", true, "}.d", true);
                 String picCode = _allPicsArray[j].Substring(_allPicsArray[j].IndexOf(".dat") + 4).Trim();
-                picCreator.createPic(picCode, format);
+                String picName = picCreator.createPic(picCode, format);
+                picMappingList.Add(location);
+                picMappingList.Add(picName);
+            }
+            String[] picMappingArr = picMappingList.ToArray();
+            for (int k = 0; k < picMappingArr.Length / 2; k++)
+            {
+                XmlNodeList pic = null;
+                String selector = "//img[@src='" + picMappingArr[2 * k] + "']";
+                pic = root.SelectNodes(selector);
+                foreach (XmlElement picEle in pic)
+                {
+                    picEle.SetAttribute("src", picMappingArr[2 * k + 1]);
+                }
             }
 
             try
