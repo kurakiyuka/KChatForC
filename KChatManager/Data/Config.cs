@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace KChatManager.Data
 {
     class Config
     {
-        private String kChatFileFolderPath;
-        public String KChatFileFolderPath
+        private String directory;
+        public String Directory
         {
-            get { return kChatFileFolderPath; }
-            set { kChatFileFolderPath = value; }
+            get { return directory; }
+            set { directory = value; }
         }
     }
 }

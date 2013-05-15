@@ -10,17 +10,41 @@ using KChatManager.Utils;
 
 namespace KChatManager
 {
-    public partial class OpenFile : Form
+    public partial class OpenFileForm : Form
     {
         private String _kChatFileFolderPath;
         private String _chatFilePath;
-        private String _allContent;
         private String _contact;
-        private XmlDocument _resultXML;
+        private XmlDocument resultXML;
 
-        public OpenFile(String path)
+        public OpenFileForm(String path)
         {
             _kChatFileFolderPath = path;
+            if (!Directory.Exists(_kChatFileFolderPath + "Common Files"))
+            {
+                Directory.CreateDirectory(_kChatFileFolderPath + "Common Files");
+            }
+            if (!File.Exists(_kChatFileFolderPath + "Common Files\\contact.xml"))
+            {
+                try
+                {
+                    XmlDocument contact = new XmlDocument();
+                    XmlDeclaration dec = contact.CreateXmlDeclaration("1.0", "UTF-8", null);
+                    contact.AppendChild(dec);
+                    XmlElement root = contact.CreateElement("contactlist");
+                    contact.AppendChild(root);
+                    XmlElement group = contact.CreateElement("group");
+                    group.SetAttribute("name", "default");
+                    root.AppendChild(group);
+                    contact.Save(_kChatFileFolderPath + "Common Files\\contact.xml");
+                }
+
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "IOError");
+                    return;
+                }
+            }
             InitializeComponent();
         }
 
@@ -38,10 +62,11 @@ namespace KChatManager
 
         private void createKChatFile_Click(object sender, EventArgs e)
         {
+            String allContent;
             try
             {
                 StreamReader fileStream = new StreamReader(_chatFilePath, Encoding.Default);
-                _allContent = fileStream.ReadToEnd();
+                allContent = fileStream.ReadToEnd();
                 fileStream.Close();
             }
             catch (IOException ex)
@@ -50,36 +75,36 @@ namespace KChatManager
                 return;
             }
 
-            _resultXML = new XmlDocument();
-            XmlNode declarationNode = _resultXML.CreateNode(XmlNodeType.XmlDeclaration, "", "");
-            _resultXML.AppendChild(declarationNode);
-            XmlElement root = _resultXML.CreateElement("kchat");
-            _resultXML.AppendChild(root);
+            resultXML = new XmlDocument();
+            XmlDeclaration dec = resultXML.CreateXmlDeclaration("1.0", "UTF-8", null);
+            resultXML.AppendChild(dec);
+            XmlElement root = resultXML.CreateElement("kchat");
+            resultXML.AppendChild(root);
 
-            String _allWordsContent = _allContent.getWordsBetween("<body>", true, "</html>", true);
-            String _allPicsContent = _allContent.getWordsBetween("</html>", true, "------=", false);
-            String[] _allWordsArray = Regex.Split(_allWordsContent, "</tr>", RegexOptions.IgnoreCase);
-            String[] _allPicsArray = Regex.Split(_allPicsContent, "------=", RegexOptions.IgnoreCase);
+            String allWordsContent = allContent.getWordsBetween("<body>", true, "</html>", true);
+            String allPicsContent = allContent.getWordsBetween("</html>", true, "------=", false);
+            String[] allWordsArray = Regex.Split(allWordsContent, "</tr>", RegexOptions.IgnoreCase);
+            String[] allPicsArray = Regex.Split(allPicsContent, "------=", RegexOptions.IgnoreCase);
 
-            _contact = _allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
+            _contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
             root.SetAttribute("contact", _contact);
 
             //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
-            for (int i = 4; i < _allWordsArray.Length - 1; i++)
+            for (int i = 4; i < allWordsArray.Length - 1; i++)
             {
                 /*
 			    * there are two types of elements: Date and Chat Log
 			    * each Chat Log element must begin with a Date element that indicates the following elements' happening time
 			    */
-                if (_allWordsArray[i].isDate())
+                if (allWordsArray[i].isDate())
                 {
                     //convert date into YYYY-MM-DD format
-                    String date = _allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
-                    XmlElement dateEle = _resultXML.CreateElement("day");
+                    String date = allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
+                    XmlElement dateEle = resultXML.CreateElement("day");
                     dateEle.SetAttribute("day", date);
                     root.AppendChild(dateEle);
 
-                    XmlElement msgEle = _resultXML.CreateElement("msg");
+                    XmlElement msgEle = resultXML.CreateElement("msg");
                     msgEle.SetAttribute("type", "day");
                     msgEle.InnerText = date;
                     dateEle.AppendChild(msgEle);
@@ -96,7 +121,7 @@ namespace KChatManager
                 */
                 else
                 {
-                    String[] msgEleArray = Regex.Split(_allWordsArray[i], "</div>", RegexOptions.IgnoreCase);
+                    String[] msgEleArray = Regex.Split(allWordsArray[i], "</div>", RegexOptions.IgnoreCase);
 
                     //get speaker's name from the first item of the array, if blank, means this is a system info
                     String speaker = msgEleArray[0].Substring(msgEleArray[0].LastIndexOf(">") + 1).formatSpeaker();
@@ -104,7 +129,7 @@ namespace KChatManager
                     //get speak time from the second item of the array
                     String time = msgEleArray[1];
 
-                    XmlElement msgEle = _resultXML.CreateElement("msg");
+                    XmlElement msgEle = resultXML.CreateElement("msg");
                     msgEle.SetAttribute("time", time);
                     msgEle.SetAttribute("speaker", speaker);
                     msgEle.SetAttribute("from", "1");
@@ -117,14 +142,14 @@ namespace KChatManager
                         if (s.IndexOf("IMG") != -1)
                         {
                             String src = s.getWordsBetween("{", true, "}", false);
-                            XmlElement imgEle = _resultXML.CreateElement("img");
+                            XmlElement imgEle = resultXML.CreateElement("img");
                             imgEle.SetAttribute("src", src);
                             msgEle.AppendChild(imgEle);
                         }
                         else if (s.IndexOf("font") != -1)
                         {
                             String p = s.getWordsBetween("'>", false, "<", false);
-                            XmlElement pEle = _resultXML.CreateElement("p");
+                            XmlElement pEle = resultXML.CreateElement("p");
                             pEle.InnerText = p;
                             msgEle.AppendChild(pEle);
                         }
@@ -140,11 +165,11 @@ namespace KChatManager
             PicCreator picCreator = new PicCreator(_kChatFileFolderPath);
             List<string> picMappingList = new List<string>();
             //first element is blank, so loop from j = 1
-            for (int j = 1; j < _allPicsArray.Length; j++)
+            for (int j = 1; j < allPicsArray.Length; j++)
             {
-                String format = _allPicsArray[j].getWordsBetween("image/", true, "Content-Transfer", true).TrimEnd();
-                String location = _allPicsArray[j].getWordsBetween("n:{", true, "}.d", true);
-                String picCode = _allPicsArray[j].Substring(_allPicsArray[j].IndexOf(".dat") + 4).Trim();
+                String format = allPicsArray[j].getWordsBetween("image/", true, "Content-Transfer", true).TrimEnd();
+                String location = allPicsArray[j].getWordsBetween("n:{", true, "}.d", true);
+                String picCode = allPicsArray[j].Substring(allPicsArray[j].IndexOf(".dat") + 4).Trim();
                 String picName = picCreator.createPic(picCode, format);
                 picMappingList.Add(location);
                 picMappingList.Add(picName);
@@ -163,7 +188,7 @@ namespace KChatManager
 
             try
             {
-                _resultXML.Save(_kChatFileFolderPath + "//" + _contact + ".kchat");
+                resultXML.Save(_kChatFileFolderPath + "//" + _contact + ".kchat");
                 MessageBox.Show("done");
             }
 

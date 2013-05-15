@@ -1,6 +1,6 @@
 ﻿namespace KChatManager
 {
-    partial class FirstUse
+    partial class FirstUseForm
     {
         /// <summary>
         /// Required designer variable.
@@ -62,21 +62,20 @@
             this.saveKChatFileFolder_btn.UseVisualStyleBackColor = true;
             this.saveKChatFileFolder_btn.Click += new System.EventHandler(this.saveKChatFileFolder_Click);
             // 
-            // FirstUse
+            // FirstUseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(494, 172);
+            this.ControlBox = false;
             this.Controls.Add(this.saveKChatFileFolder_btn);
             this.Controls.Add(this.browseKChatFileFolder_btn);
             this.Controls.Add(this.kChatFileFolder_txt);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "FirstUse";
+            this.Name = "FirstUseForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Set KChat File Folder";
             this.ResumeLayout(false);

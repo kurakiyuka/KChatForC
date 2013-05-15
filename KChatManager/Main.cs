@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Windows.Forms;
 using System.IO;
+using System.Text;
+using System.Windows.Forms;
 using System.Xml;
+using KChatManager.Utils;
 
 namespace KChatManager
 {
@@ -18,38 +20,31 @@ namespace KChatManager
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFile openFileForm = new OpenFile(kChatFileFolderPath);
-            openFileForm.Show();
+            OpenFileForm frmOpenFile = new OpenFileForm(kChatFileFolderPath);
+            frmOpenFile.Show();
         }
 
         private void checkConfigFile()
         {
             configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager\\config.xml";
-            FileInfo configFile = new FileInfo(configFilePath);
-            if (configFile.Exists)
+            if (!File.Exists(configFilePath))
             {
-                readConfigFile();
+                FirstUseForm frmFisrtUse = new FirstUseForm();
+                frmFisrtUse.ShowDialog(); 
             }
-            else
-            {
-                FirstUse firstUseForm = new FirstUse();
-                firstUseForm.ShowDialog();
-            }
+
+            readConfigFile();
         }
 
         private void readConfigFile()
         {
             try
             {
-                XmlReaderSettings xmlSets = new XmlReaderSettings();
-                xmlSets.ConformanceLevel = ConformanceLevel.Fragment;
-                xmlSets.IgnoreWhitespace = true;
-                xmlSets.IgnoreComments = true;
+                StreamReader fs = new StreamReader(configFilePath, Encoding.Default);
+                String config = fs.ReadToEnd();
+                fs.Close();
 
-                XmlReader configReader = XmlReader.Create(configFilePath, xmlSets);
-                configReader.ReadStartElement("Config");
-                configReader.ReadStartElement("Directory");
-                kChatFileFolderPath = configReader.ReadString();
+                kChatFileFolderPath = new ConfigFileParser().parSerConfig(config).Directory;
             }
             catch (Exception ex)
             {

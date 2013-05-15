@@ -10,10 +10,10 @@ namespace KChatManager.Utils
     {
         private String storePath;
 
-        //path是整个KChat工程的存储目录
+        //path is the directory of kchat project
         public PicCreator(String path)
         {
-            //图片被存放在总的存储目录下面的一个文件夹内，如果不存在，则先创建这个文件夹
+            //all images will be stored in an given folder path， user can't change it
             storePath = path + "Common Files\\images\\";
             if (!Directory.Exists(storePath))
             {
@@ -25,14 +25,20 @@ namespace KChatManager.Utils
         {
             try
             {
-                //将图片的base64代码进行Hash，把Hash结果作为文件名，再加上后缀名
+                //use standard 3 letter suffix
+                if (format == "jpeg")
+                {
+                    format = "jpg";
+                }
+
+                //get hash code of this specific image as its file name, ensuring duplicate image won't be created
                 String fileName = base64Code.GetHashCode().ToString();
                 fileName = fileName + "." + format;
 
-                //生成图片的完整路径
-                String fileFullPath = storePath + "\\" + fileName + "." + format;
+                //generate full path of the image
+                String fileFullPath = storePath + "\\" + fileName;
 
-                //如果图片还不存在，那么创建它，最后把图片文件名返回
+                //if image doesn't exist， create it
                 if (!File.Exists(fileFullPath))
                 {
                     byte[] arr = Convert.FromBase64String(base64Code);
@@ -42,7 +48,7 @@ namespace KChatManager.Utils
 
                     switch (format)
                     {
-                        case "jpeg":
+                        case "jpg":
                             image.Save(fileFullPath, ImageFormat.Jpeg);
                             break;
                         case "gif":
@@ -60,6 +66,7 @@ namespace KChatManager.Utils
                     ms.Close();
                 }
 
+                //return file name for replacing the original "src" in _resultXML
                 return fileName;
             }
             catch (Exception ex)

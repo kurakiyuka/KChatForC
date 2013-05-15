@@ -1,12 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Xml;
+using KChatManager.Data;
 
 namespace KChatManager.Utils
 {
-    public class ConfigFileParser
+    class ConfigFileParser
     {
-
+        private Config cfg;
+        public Config parSerConfig(String str)
+        {
+            cfg = new Config();
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(str);
+            cfg.Directory = xml.SelectSingleNode("//directory").InnerText.ToString();
+            return cfg;
+        }
     }
 }

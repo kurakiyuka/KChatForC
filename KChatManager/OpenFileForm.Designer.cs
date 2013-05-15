@@ -1,6 +1,6 @@
 ﻿namespace KChatManager
 {
-    partial class OpenFile
+    partial class OpenFileForm
     {
         /// <summary>
         /// Required designer variable.

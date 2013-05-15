@@ -5,29 +5,29 @@ using System.Xml;
 
 namespace KChatManager
 {
-    public partial class FirstUse : Form
+    public partial class FirstUseForm : Form
     {
-        private String _kChatFileFolderPath;
+        private String kChatFileFolderPath;
 
-        public FirstUse()
+        public FirstUseForm()
         {
             InitializeComponent();
         }
 
         private void browseKChatFileFolder_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog selectKChatFileFolder = new FolderBrowserDialog();
-            selectKChatFileFolder.Description = "Select The Folder For Storing KChat Files";
-            if (selectKChatFileFolder.ShowDialog() == DialogResult.OK)
+            FolderBrowserDialog dlgSelectKChatFolder = new FolderBrowserDialog();
+            dlgSelectKChatFolder.Description = "Select The Folder For Storing KChat Files";
+            if (dlgSelectKChatFolder.ShowDialog() == DialogResult.OK)
             {
-                kChatFileFolder_txt.Text = selectKChatFileFolder.SelectedPath + "KChatManager\\";
-                _kChatFileFolderPath = kChatFileFolder_txt.Text;
+                kChatFileFolder_txt.Text = dlgSelectKChatFolder.SelectedPath + "KChatManager\\";
+                kChatFileFolderPath = kChatFileFolder_txt.Text;
             }
         }
 
         private void saveKChatFileFolder_Click(object sender, EventArgs e)
         {
-            if (_kChatFileFolderPath == "" || _kChatFileFolderPath == null)
+            if (kChatFileFolderPath == "" || kChatFileFolderPath == null)
             {
                 MessageBox.Show("Please Select the Folder For Storing KChat Files", "Alert");
             }
@@ -43,15 +43,15 @@ namespace KChatManager
                 //Write Config File
                 try
                 {
-                    XmlWriterSettings xmlSets = new XmlWriterSettings();
-                    xmlSets.Indent = true;
-                    xmlSets.IndentChars = ("    ");
-
-                    XmlWriter configFileWriter = XmlWriter.Create(configFileFolderPath + "\\config.xml", xmlSets);
-                    configFileWriter.WriteStartElement("Config");
-                    configFileWriter.WriteElementString("Directory", _kChatFileFolderPath);
-                    configFileWriter.WriteEndElement();
-                    configFileWriter.Flush();
+                    XmlDocument config = new XmlDocument();
+                    XmlDeclaration dec = config.CreateXmlDeclaration("1.0", "UTF-8", null);
+                    config.AppendChild(dec);
+                    XmlElement root = config.CreateElement("config");
+                    config.AppendChild(root);
+                    XmlElement dir = config.CreateElement("directory");
+                    dir.InnerText = kChatFileFolderPath;
+                    root.AppendChild(dir);
+                    config.Save(configFileFolderPath + "\\config.xml");
 
                     this.Close();
                 }
