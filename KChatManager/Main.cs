@@ -10,12 +10,29 @@ namespace KChatManager
     public partial class Main : Form
     {
         private String kChatFileFolderPath;
+        private String contactFilePath;
         private String configFilePath;
 
         public Main()
         {
             InitializeComponent();
             checkConfigFile();
+
+            TreeNode node = new TreeNode("联系人");       
+
+            contactFilePath = kChatFileFolderPath + "Common Files\\contact.xml";
+            if (File.Exists(contactFilePath))
+            {
+                XmlDocument contact = new XmlDocument();
+                contact.Load(contactFilePath);
+                foreach (XmlElement el in contact.SelectNodes("//contact"))
+                {
+                    node.Nodes.Add(new TreeNode(el.InnerText));
+                }
+            }
+
+            trvContactList.Nodes.Add(node);
+            trvContactList.ExpandAll();
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)

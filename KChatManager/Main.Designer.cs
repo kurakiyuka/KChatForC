@@ -37,6 +37,8 @@
             this.viewHelpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutKChatManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.trvContactList = new System.Windows.Forms.TreeView();
+            this.panelChatLog = new System.Windows.Forms.Panel();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,12 +112,29 @@
             this.aboutKChatManagerToolStripMenuItem.Size = new System.Drawing.Size(189, 22);
             this.aboutKChatManagerToolStripMenuItem.Text = "About KChatManager";
             // 
+            // trvContactList
+            // 
+            this.trvContactList.Location = new System.Drawing.Point(12, 37);
+            this.trvContactList.Name = "trvContactList";
+            this.trvContactList.Size = new System.Drawing.Size(183, 465);
+            this.trvContactList.TabIndex = 1;
+            // 
+            // panelChatLog
+            // 
+            this.panelChatLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelChatLog.Location = new System.Drawing.Point(219, 37);
+            this.panelChatLog.Name = "panelChatLog";
+            this.panelChatLog.Size = new System.Drawing.Size(814, 631);
+            this.panelChatLog.TabIndex = 2;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1064, 762);
+            this.Controls.Add(this.panelChatLog);
+            this.Controls.Add(this.trvContactList);
             this.Controls.Add(this.mainMenu);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -126,6 +145,7 @@
             this.mainMenu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -139,6 +159,8 @@
         private System.Windows.Forms.ToolStripMenuItem viewHelpToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem aboutKChatManagerToolStripMenuItem;
+        private System.Windows.Forms.TreeView trvContactList;
+        private System.Windows.Forms.Panel panelChatLog;
     }
 }
 

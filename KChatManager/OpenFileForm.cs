@@ -88,6 +88,7 @@ namespace KChatManager
 
             _contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
             root.SetAttribute("contact", _contact);
+            new ContactSaver().save(_kChatFileFolderPath, _contact);
 
             //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
             for (int i = 4; i < allWordsArray.Length - 1; i++)
