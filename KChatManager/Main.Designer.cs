@@ -118,9 +118,11 @@
             this.trvContactList.Name = "trvContactList";
             this.trvContactList.Size = new System.Drawing.Size(183, 465);
             this.trvContactList.TabIndex = 1;
+            this.trvContactList.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.trvContactList_AfterSelect);
             // 
             // panelChatLog
             // 
+            this.panelChatLog.AutoScroll = true;
             this.panelChatLog.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelChatLog.Location = new System.Drawing.Point(219, 37);
             this.panelChatLog.Name = "panelChatLog";

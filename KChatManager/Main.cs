@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using KChatManager.UserCtrl;
 using KChatManager.Utils;
 
 namespace KChatManager
@@ -12,6 +14,7 @@ namespace KChatManager
         private String kChatFileFolderPath;
         private String contactFilePath;
         private String configFilePath;
+        private int counter = 0;
 
         public Main()
         {
@@ -67,6 +70,17 @@ namespace KChatManager
             {
                 MessageBox.Show(ex.ToString(), "IOError");
                 return;
+            }
+        }
+
+        private void trvContactList_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (trvContactList.SelectedNode.Level == 1)
+            {               
+                ShowChat sc = new ShowChat();
+                sc.Location = new Point(10, 110 * counter + 20);
+                panelChatLog.Controls.Add(sc);
+                counter++;
             }
         }
     }
