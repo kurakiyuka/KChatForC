@@ -69,6 +69,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserCtrl\ShowChat.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserCtrl\ShowChat.Designer.cs">
+      <DependentUpon>ShowChat.cs</DependentUpon>
+    </Compile>
     <Compile Include="Utils\ConfigFileParser.cs" />
     <Compile Include="Utils\ContactListParser.cs" />
     <Compile Include="Utils\ContactSaver.cs" />

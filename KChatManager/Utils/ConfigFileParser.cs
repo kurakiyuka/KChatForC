@@ -12,7 +12,7 @@ namespace KChatManager.Utils
             cfg = new Config();
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(str);
-            cfg.Directory = xml.SelectSingleNode("//directory").InnerText.ToString();
+            cfg.Directory = xml.SelectSingleNode("//directory").InnerText;
             return cfg;
         }
     }
