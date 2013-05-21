@@ -18,10 +18,14 @@ namespace KChatManager
 
         public Main()
         {
-            InitializeComponent();
+            InitializeComponent();            
+        }
+
+        private void Main_Shown(object sender, EventArgs e)
+        {
             checkConfigFile();
 
-            TreeNode node = new TreeNode("联系人");       
+            TreeNode node = new TreeNode("联系人");
 
             contactFilePath = kChatFileFolderPath + "Common Files\\contact.xml";
             if (File.Exists(contactFilePath))
