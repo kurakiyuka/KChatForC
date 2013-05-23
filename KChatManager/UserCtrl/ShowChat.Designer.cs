@@ -30,6 +30,7 @@
         {
             this.lbName = new System.Windows.Forms.Label();
             this.lbTime = new System.Windows.Forms.Label();
+            this.lbContent = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lbName
@@ -50,18 +51,28 @@
             this.lbTime.TabIndex = 1;
             this.lbTime.Text = "lbTime";
             // 
+            // lbContent
+            // 
+            this.lbContent.AutoSize = true;
+            this.lbContent.Location = new System.Drawing.Point(6, 29);
+            this.lbContent.Name = "lbContent";
+            this.lbContent.Size = new System.Drawing.Size(70, 19);
+            this.lbContent.TabIndex = 2;
+            this.lbContent.Text = "lbContent";
+            // 
             // ShowChat
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.lbContent);
             this.Controls.Add(this.lbTime);
             this.Controls.Add(this.lbName);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ShowChat";
-            this.Size = new System.Drawing.Size(700, 100);
+            this.Size = new System.Drawing.Size(700, 60);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -71,5 +82,6 @@
 
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.Label lbTime;
+        private System.Windows.Forms.Label lbContent;
     }
 }

@@ -131,6 +131,7 @@ namespace KChatManager
                     String time = msgEleArray[1];
 
                     XmlElement msgEle = resultXML.CreateElement("msg");
+                    msgEle.SetAttribute("type", "msg");
                     msgEle.SetAttribute("time", time);
                     msgEle.SetAttribute("speaker", speaker);
                     msgEle.SetAttribute("from", "1");

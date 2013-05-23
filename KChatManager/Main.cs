@@ -80,11 +80,33 @@ namespace KChatManager
         private void trvContactList_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (trvContactList.SelectedNode.Level == 1)
-            {               
-                ShowChat sc = new ShowChat();
-                sc.Location = new Point(10, 110 * counter + 20);
-                panelChatLog.Controls.Add(sc);
-                counter++;
+            {
+                panelChatLog.Controls.Clear();
+                counter = 0;
+                int totalHeight = 0;
+                String path = kChatFileFolderPath + trvContactList.SelectedNode.Text + ".kchat";
+                XmlDocument xmlDoc = new XmlDocument();
+
+                try
+                {
+                    StreamReader fileStream = new StreamReader(path, Encoding.Default);
+                    xmlDoc.LoadXml(fileStream.ReadToEnd());
+                    fileStream.Close();
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "IOError");
+                    return;
+                }
+
+                foreach(XmlNode msgNode in xmlDoc.SelectNodes("//msg"))
+                {
+                    ShowChat sc = new ShowChat(msgNode);
+                    sc.Location = new Point(10, totalHeight + 20 * (counter + 1));
+                    panelChatLog.Controls.Add(sc);
+                    counter++;
+                    totalHeight += sc.Height;
+                }
             }
         }
     }
