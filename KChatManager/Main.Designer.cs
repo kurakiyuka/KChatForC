@@ -39,6 +39,8 @@
             this.aboutKChatManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trvContactList = new System.Windows.Forms.TreeView();
             this.panelChatLog = new System.Windows.Forms.Panel();
+            this.dtp = new System.Windows.Forms.DateTimePicker();
+            this.ps = new KChatManager.PageSeparator();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -129,12 +131,30 @@
             this.panelChatLog.Size = new System.Drawing.Size(814, 631);
             this.panelChatLog.TabIndex = 2;
             // 
+            // dtp
+            // 
+            this.dtp.Location = new System.Drawing.Point(219, 698);
+            this.dtp.Name = "dtp";
+            this.dtp.Size = new System.Drawing.Size(200, 25);
+            this.dtp.TabIndex = 3;
+            // 
+            // ps
+            // 
+            this.ps.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ps.Location = new System.Drawing.Point(683, 687);
+            this.ps.Margin = new System.Windows.Forms.Padding(4);
+            this.ps.Name = "ps";
+            this.ps.Size = new System.Drawing.Size(350, 48);
+            this.ps.TabIndex = 4;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(1064, 762);
+            this.Controls.Add(this.ps);
+            this.Controls.Add(this.dtp);
             this.Controls.Add(this.panelChatLog);
             this.Controls.Add(this.trvContactList);
             this.Controls.Add(this.mainMenu);
@@ -164,6 +184,8 @@
         private System.Windows.Forms.ToolStripMenuItem aboutKChatManagerToolStripMenuItem;
         private System.Windows.Forms.TreeView trvContactList;
         private System.Windows.Forms.Panel panelChatLog;
+        private System.Windows.Forms.DateTimePicker dtp;
+        private PageSeparator ps;
     }
 }
 
