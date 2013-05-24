@@ -10,7 +10,7 @@ namespace KChatManager
 
         public PageSeparator()
         {
-            InitializeComponent();           
+            InitializeComponent();
             update();
         }
 
@@ -36,11 +36,17 @@ namespace KChatManager
 
         private void updateBtn(int currentNum)
         {
+            btnFirstPage.Enabled = true;
+            btnPrePage.Enabled = true;
+            btnNextPage.Enabled = true;
+            btnLastPage.Enabled = true;
+
             if (currentNum <= 1)
             {
                 btnFirstPage.Enabled = false;
                 btnPrePage.Enabled = false;
             }
+
             if (totalNum <= 1)
             {
                 btnFirstPage.Enabled = false;
@@ -48,6 +54,7 @@ namespace KChatManager
                 btnNextPage.Enabled = false;
                 btnLastPage.Enabled = false;
             }
+
             if (currentNum == totalNum)
             {
                 btnNextPage.Enabled = false;

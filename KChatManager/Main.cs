@@ -14,6 +14,7 @@ namespace KChatManager
         private String kChatFileFolderPath;
         private String contactFilePath;
         private String configFilePath;
+        private String picFolderPath;
         private int counter = 0;
 
         public Main()
@@ -69,6 +70,7 @@ namespace KChatManager
                 fs.Close();
 
                 kChatFileFolderPath = new ConfigFileParser().parSerConfig(config).Directory;
+                picFolderPath = kChatFileFolderPath + "Common Files\\images\\";
             }
             catch (Exception ex)
             {
@@ -98,10 +100,13 @@ namespace KChatManager
                     MessageBox.Show(ex.ToString(), "IOError");
                     return;
                 }
+                
+                int msgNum = xmlDoc.SelectNodes("//msg").Count;
+                ps.update(msgNum);
 
                 foreach(XmlNode msgNode in xmlDoc.SelectNodes("//msg"))
                 {
-                    ShowChat sc = new ShowChat(msgNode);
+                    ShowChat sc = new ShowChat(msgNode, picFolderPath);
                     sc.Location = new Point(10, totalHeight + 20 * (counter + 1));
                     panelChatLog.Controls.Add(sc);
                     counter++;
