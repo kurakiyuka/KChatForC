@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -12,19 +11,20 @@ namespace KChatManager
 {
     public partial class OpenFileForm : Form
     {
-        private String _kChatFileFolderPath;
-        private String _chatFilePath;
-        private String _contact;
+        private String kChatFileFolderPath;
+        private String chatFilePath;
+        private String contact;
         private XmlDocument resultXML;
 
         public OpenFileForm(String path)
         {
-            _kChatFileFolderPath = path;
-            if (!Directory.Exists(_kChatFileFolderPath + "Common Files"))
+            //create contact.xml while opening the OpenFile Dialog first time
+            kChatFileFolderPath = path;
+            if (!Directory.Exists(kChatFileFolderPath + "Common Files"))
             {
-                Directory.CreateDirectory(_kChatFileFolderPath + "Common Files");
+                Directory.CreateDirectory(kChatFileFolderPath + "Common Files");
             }
-            if (!File.Exists(_kChatFileFolderPath + "Common Files\\contact.xml"))
+            if (!File.Exists(kChatFileFolderPath + "Common Files\\contact.xml"))
             {
                 try
                 {
@@ -36,7 +36,7 @@ namespace KChatManager
                     XmlElement group = contact.CreateElement("group");
                     group.SetAttribute("name", "default");
                     root.AppendChild(group);
-                    contact.Save(_kChatFileFolderPath + "Common Files\\contact.xml");
+                    contact.Save(kChatFileFolderPath + "Common Files\\contact.xml");
                 }
 
                 catch (IOException ex)
@@ -56,7 +56,7 @@ namespace KChatManager
             if (selectChatFile.ShowDialog() == DialogResult.OK)
             {
                 chatFileDirectory_txt.Text = selectChatFile.FileName;
-                _chatFilePath = chatFileDirectory_txt.Text;
+                chatFilePath = chatFileDirectory_txt.Text;
             }
         }
 
@@ -65,7 +65,7 @@ namespace KChatManager
             String allContent;
             try
             {
-                StreamReader fileStream = new StreamReader(_chatFilePath, Encoding.Default);
+                StreamReader fileStream = new StreamReader(chatFilePath, Encoding.Default);
                 allContent = fileStream.ReadToEnd();
                 fileStream.Close();
             }
@@ -79,6 +79,8 @@ namespace KChatManager
             XmlDeclaration dec = resultXML.CreateXmlDeclaration("1.0", "UTF-8", null);
             resultXML.AppendChild(dec);
             XmlElement root = resultXML.CreateElement("kchat");
+            //version number used for upgrade
+            root.SetAttribute("ver", "0.1");
             resultXML.AppendChild(root);
 
             String allWordsContent = allContent.getWordsBetween("<body>", true, "</html>", true);
@@ -86,21 +88,27 @@ namespace KChatManager
             String[] allWordsArray = Regex.Split(allWordsContent, "</tr>", RegexOptions.IgnoreCase);
             String[] allPicsArray = Regex.Split(allPicsContent, "------=", RegexOptions.IgnoreCase);
 
-            _contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
-            root.SetAttribute("contact", _contact);
-            new ContactSaver().save(_kChatFileFolderPath, _contact);
+            contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
+            root.SetAttribute("contact", contact);
+            new ContactSaver().save(kChatFileFolderPath, contact);
 
             //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
             for (int i = 4; i < allWordsArray.Length - 1; i++)
             {
                 /*
-			    * there are two types of elements: Date and Chat Log
-			    * each Chat Log element must begin with a Date element that indicates the following elements' happening time
-			    */
+                 * there are two types of elements: Date and Chat Log
+                 * each Chat Log element must begin with a Date element that indicates the following elements' happening time
+                 */
                 if (allWordsArray[i].isDate())
                 {
                     //convert date into YYYY-MM-DD format
                     String date = allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
+
+                    /*
+                     * <day day="2012-03-17">
+                     *   <msg type="day">2012-03-17</msg>
+                     * </day>
+                     */
                     XmlElement dateEle = resultXML.CreateElement("day");
                     dateEle.SetAttribute("day", date);
                     root.AppendChild(dateEle);
@@ -112,14 +120,14 @@ namespace KChatManager
                 }
 
                 /*
-                * Chat Log elements
-                * <tr><td><div style=...><div style=...>kurakiyuka</div>13:35:31</div><div style=...><font style=...>hello</font></div></td>
-                * split by </div> into following 4 new items
-                * <td><div style=...><div style=...>kurakiyuka
-                * 13:35:31
-                * <div style=...><font style=...>hello</font>
-                * </td>
-                */
+                 * Chat Log elements
+                 * <tr><td><div style=...><div style=...>kurakiyuka</div>13:35:31</div><div style=...><font style=...>hello</font></div></td>
+                 * split by </div> into following 4 new items
+                 * <td><div style=...><div style=...>kurakiyuka
+                 * 13:35:31
+                 * <div style=...><font style=...>hello</font>
+                 * </td>
+                 */
                 else
                 {
                     String[] msgEleArray = Regex.Split(allWordsArray[i], "</div>", RegexOptions.IgnoreCase);
@@ -141,14 +149,19 @@ namespace KChatManager
 
                     foreach (String s in contentArr)
                     {
-                        if (s.IndexOf("IMG") != -1)
+                        if (s.Contains("IMG"))
                         {
                             String src = s.getWordsBetween("{", true, "}", false);
                             XmlElement imgEle = resultXML.CreateElement("img");
                             imgEle.SetAttribute("src", src);
                             msgEle.AppendChild(imgEle);
                         }
-                        else if (s.IndexOf("font") != -1)
+                        /*
+                         * <font style="font-size:9pt;font-family:'MS Sans Serif',sans-serif;" color='505050'><br></font>
+                         * will be cutted into 3 elements we all don;t need
+                         * font style="font-size:9pt;font-family:'MS Sans Serif',sans-serif;" color='505050' ; br ; /font
+                         */
+                        else if (s.StartsWith("font") && !s.EndsWith("50'"))
                         {
                             String p = s.getWordsBetween("'>", false, "<", false);
                             XmlElement pEle = resultXML.CreateElement("p");
@@ -161,10 +174,10 @@ namespace KChatManager
                     }
 
                     root.LastChild.AppendChild(msgEle);
-                }
-            }
+                }//end else
+            }//end for
 
-            PicCreator picCreator = new PicCreator(_kChatFileFolderPath);
+            PicCreator picCreator = new PicCreator(kChatFileFolderPath);
             List<string> picMappingList = new List<string>();
             //first element is blank, so loop from j = 1
             for (int j = 1; j < allPicsArray.Length; j++)
@@ -190,7 +203,7 @@ namespace KChatManager
 
             try
             {
-                resultXML.Save(_kChatFileFolderPath + "//" + _contact + ".kchat");
+                resultXML.Save(kChatFileFolderPath + "//" + contact + ".kchat");
                 MessageBox.Show("done");
             }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace KChatManager
 {
@@ -8,23 +9,39 @@ namespace KChatManager
         public static String getWordsBetween(this String str, String startWord, bool startWordCountFromStart, String endWord, bool endWordCountFromStart)
         {
             int startIndex, endIndex, stringLength;
-            if (startWordCountFromStart)
+            if (str.Contains(startWord))
             {
-                startIndex = str.IndexOf(startWord);
+                if (startWordCountFromStart)
+                {
+                    startIndex = str.IndexOf(startWord);
+                }
+                else
+                {
+                    startIndex = str.LastIndexOf(startWord);
+                }
+                startIndex += startWord.Length;
             }
             else
             {
-                startIndex = str.LastIndexOf(startWord);
+                MessageBox.Show("Error in function getWordsBetween: can't find start word");
+                return "Error";
             }
-            startIndex += startWord.Length;
 
-            if (endWordCountFromStart)
+            if (str.Contains(endWord))
             {
-                endIndex = str.IndexOf(endWord);
+                if (endWordCountFromStart)
+                {
+                    endIndex = str.IndexOf(endWord);
+                }
+                else
+                {
+                    endIndex = str.LastIndexOf(endWord);
+                }
             }
             else
             {
-                endIndex = str.LastIndexOf(endWord);
+                MessageBox.Show("Error in function getWordsBetween: can't find end word");
+                return "Error";
             }
 
             stringLength = endIndex - startIndex;
