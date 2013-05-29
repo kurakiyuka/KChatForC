@@ -84,6 +84,7 @@
     <Compile Include="Utils\ConfigFileParser.cs" />
     <Compile Include="Utils\ContactListParser.cs" />
     <Compile Include="Utils\ContactSaver.cs" />
+    <Compile Include="Utils\FontParser.cs" />
     <Compile Include="Utils\MD5Creator.cs" />
     <Compile Include="Utils\PicCreator.cs" />
     <EmbeddedResource Include="FirstUseForm.resx">

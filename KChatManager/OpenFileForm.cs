@@ -63,6 +63,8 @@ namespace KChatManager
         private void createKChatFile_Click(object sender, EventArgs e)
         {
             String allContent;
+            List<String> fontList = new List<String>();
+
             try
             {
                 StreamReader fileStream = new StreamReader(chatFilePath, Encoding.Default);
@@ -94,7 +96,7 @@ namespace KChatManager
 
             //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
             for (int i = 4; i < allWordsArray.Length - 1; i++)
-            {
+            {             
                 /*
                  * there are two types of elements: Date and Chat Log
                  * each Chat Log element must begin with a Date element that indicates the following elements' happening time
@@ -130,7 +132,8 @@ namespace KChatManager
                  */
                 else
                 {
-                    String[] msgEleArray = Regex.Split(allWordsArray[i], "</div>", RegexOptions.IgnoreCase);
+                    String[] msgEleArray = Regex.Split(allWordsArray[i], "</div>", RegexOptions.IgnoreCase);                   
+                    String font = null;
 
                     //get speaker's name from the first item of the array, if blank, means this is a system info
                     String speaker = msgEleArray[0].Substring(msgEleArray[0].LastIndexOf(">") + 1).formatSpeaker();
@@ -158,12 +161,13 @@ namespace KChatManager
                         }
                         /*
                          * <font style="font-size:9pt;font-family:'MS Sans Serif',sans-serif;" color='505050'><br></font>
-                         * will be cutted into 3 elements we all don;t need
+                         * will be cutted into 3 elements we all don't need
                          * font style="font-size:9pt;font-family:'MS Sans Serif',sans-serif;" color='505050' ; br ; /font
                          */
                         else if (s.StartsWith("font") && !s.EndsWith("50'"))
                         {
                             String p = s.getWordsBetween("'>", false, "<", false);
+                            font = s.getWordsBetween("style=\"", true, ">", true);                            
                             XmlElement pEle = resultXML.CreateElement("p");
                             pEle.InnerText = p;
                             msgEle.AppendChild(pEle);
@@ -171,7 +175,13 @@ namespace KChatManager
                         else
                         {
                         }
+
+                        if(!fontList.Contains(font))
+                        {
+                            fontList.Add(font);
+                        }
                     }
+                    msgEle.SetAttribute("fontStyle", fontList.IndexOf(font).ToString());
 
                     root.LastChild.AppendChild(msgEle);
                 }//end else
@@ -200,6 +210,8 @@ namespace KChatManager
                     picEle.SetAttribute("src", picMappingArr[2 * k + 1]);
                 }
             }
+            
+            root.AppendChild(root.OwnerDocument.ImportNode(new FontParser().parseFont(fontList), true));
 
             try
             {
