@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace KChatManager.Utils
@@ -10,7 +11,15 @@ namespace KChatManager.Utils
         {
             String contactFilePath = path + "Common Files\\contact.xml";
             XmlDocument contactList = new XmlDocument();
-            contactList.Load(contactFilePath);
+            try
+            {
+                contactList.Load(contactFilePath);
+            }
+            catch (IOException ex)
+            {
+                MessageBox.Show(ex.ToString(), "IOError");
+                return;
+            }
 
             if (!contactList.InnerText.Contains(name))
             {
@@ -19,7 +28,15 @@ namespace KChatManager.Utils
                 newContact.InnerText = name;
                 defalutGroup.AppendChild(newContact);
 
-                contactList.Save(contactFilePath);
+                try
+                {
+                    contactList.Save(contactFilePath);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "IOError");
+                    return;
+                }
             }
         }
     }

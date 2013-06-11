@@ -13,8 +13,6 @@ namespace KChatManager
     {
         private String kChatFileFolderPath;
         private String chatFilePath;
-        private String contact;
-        private XmlDocument resultXML;
 
         public OpenFileForm(String path)
         {
@@ -62,8 +60,10 @@ namespace KChatManager
 
         private void createKChatFile_Click(object sender, EventArgs e)
         {
-            String allContent;
+            String allContent = null;
             List<String> fontList = new List<String>();
+            XmlDocument resultXML = new XmlDocument();
+            XmlElement root;
 
             try
             {
@@ -75,26 +75,50 @@ namespace KChatManager
             {
                 MessageBox.Show(ex.ToString(), "IOError");
                 return;
-            }
-
-            resultXML = new XmlDocument();
-            XmlDeclaration dec = resultXML.CreateXmlDeclaration("1.0", "UTF-8", null);
-            resultXML.AppendChild(dec);
-            XmlElement root = resultXML.CreateElement("kchat");
-            //version number used for upgrade
-            root.SetAttribute("ver", "0.1");
-            resultXML.AppendChild(root);
+            }            
 
             String allWordsContent = allContent.getWordsBetween("<body>", true, "</html>", true);
             String allPicsContent = allContent.getWordsBetween("</html>", true, "------=", false);
             String[] allWordsArray = Regex.Split(allWordsContent, "</tr>", RegexOptions.IgnoreCase);
             String[] allPicsArray = Regex.Split(allPicsContent, "------=", RegexOptions.IgnoreCase);
 
-            contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
-            root.SetAttribute("contact", contact);
+            //get and save contact
+            String contact = allWordsArray[2].getWordsBetween("消息对象:", true, "</div>", false);
             new ContactSaver().save(kChatFileFolderPath, contact);
 
-            //the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
+            String savePath = kChatFileFolderPath + contact + ".kchat";
+            if (File.Exists(savePath))
+            {
+                try
+                {
+                    resultXML.Load(savePath);
+                }
+                catch (IOException ex)
+                {
+                    MessageBox.Show(ex.ToString(), "IOError");
+                    return;
+                }
+
+                root = resultXML.SelectSingleNode("//kchat") as XmlElement;
+            }
+            else
+            {
+                XmlDeclaration dec = resultXML.CreateXmlDeclaration("1.0", "UTF-8", null);
+                resultXML.AppendChild(dec);
+                root = resultXML.CreateElement("kchat");
+                //version number used for upgrade
+                root.SetAttribute("ver", "0.1");               
+                root.SetAttribute("contact", contact);
+                resultXML.AppendChild(root);
+            }
+
+            /*
+             * the first 4 elements in this Array is determined to be useless, so we start loop from 5th element
+             * From: <Save by Tencent MsgMgr>...
+             * <tr><td><div style=padding-left:10px;>group:music</div></td>
+             * <tr><td><div style=padding-left:10px;>contact:kuraki</div></td>
+             * <tr><td><div style=padding-left:10px;>&nbsp;</div></td>
+             */
             for (int i = 4; i < allWordsArray.Length - 1; i++)
             {             
                 /*
@@ -106,19 +130,23 @@ namespace KChatManager
                     //convert date into YYYY-MM-DD format
                     String date = allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
 
-                    /*
-                     * <day day="2012-03-17">
-                     *   <msg type="day">2012-03-17</msg>
-                     * </day>
-                     */
-                    XmlElement dateEle = resultXML.CreateElement("day");
-                    dateEle.SetAttribute("day", date);
-                    root.AppendChild(dateEle);
+                    String selector = "//day[@day='" + date + "']";
+                    if (root.SelectSingleNode(selector) == null)
+                    {
+                        /*
+                         * <day day="2012-03-17">
+                         *   <msg type="day">2012-03-17</msg>
+                         * </day>
+                         */
+                        XmlElement dateEle = resultXML.CreateElement("day");
+                        dateEle.SetAttribute("day", date);
+                        root.AppendChild(dateEle);
 
-                    XmlElement msgEle = resultXML.CreateElement("msg");
-                    msgEle.SetAttribute("type", "day");
-                    msgEle.InnerText = date;
-                    dateEle.AppendChild(msgEle);
+                        XmlElement msgEle = resultXML.CreateElement("msg");
+                        msgEle.SetAttribute("type", "day");
+                        msgEle.InnerText = date;
+                        dateEle.AppendChild(msgEle);
+                    }
                 }
 
                 /*
@@ -215,7 +243,7 @@ namespace KChatManager
 
             try
             {
-                resultXML.Save(kChatFileFolderPath + "//" + contact + ".kchat");
+                resultXML.Save(savePath);
                 MessageBox.Show("done");
             }
 

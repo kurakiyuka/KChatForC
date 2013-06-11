@@ -50,7 +50,7 @@ namespace KChatManager
 
         public static Boolean isDate(this String str)
         {
-            if (str.IndexOf(">日期") != -1)
+            if (str.Contains(">日期"))
             {
                 return true;
             }
@@ -63,7 +63,7 @@ namespace KChatManager
         public static String formatDate(this String str)
         {
             //some version of QQ display Date as YYYY-MM-DD
-            if (str.IndexOf("-") != -1)
+            if (str.Contains("-"))
             {
                 return str;
             }

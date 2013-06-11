@@ -63,20 +63,8 @@ namespace KChatManager
 
         private void readConfigFile()
         {
-            try
-            {
-                StreamReader fs = new StreamReader(configFilePath, Encoding.Default);
-                String config = fs.ReadToEnd();
-                fs.Close();
-
-                kChatFileFolderPath = new ConfigFileParser().parSerConfig(config).Directory;
-                picFolderPath = kChatFileFolderPath + "Common Files\\images\\";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "IOError");
-                return;
-            }
+            kChatFileFolderPath = new ConfigFileParser().parseConfig(configFilePath).Directory;
+            picFolderPath = kChatFileFolderPath + "Common Files\\images\\";
         }
 
         private void trvContactList_AfterSelect(object sender, TreeViewEventArgs e)
@@ -91,9 +79,7 @@ namespace KChatManager
 
                 try
                 {
-                    StreamReader fileStream = new StreamReader(path, Encoding.Default);
-                    xmlDoc.LoadXml(fileStream.ReadToEnd());
-                    fileStream.Close();
+                    xmlDoc.Load(path);
                 }
                 catch (IOException ex)
                 {
