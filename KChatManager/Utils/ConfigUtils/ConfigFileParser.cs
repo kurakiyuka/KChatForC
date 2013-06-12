@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using System.Xml;
 using KChatManager.Data;
 
-namespace KChatManager.Utils
+namespace KChatManager.Utils.ConfigUtils
 {
     class ConfigFileParser
     {

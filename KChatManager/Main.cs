@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using KChatManager.UserCtrl;
-using KChatManager.Utils;
+using KChatManager.Utils.ConfigUtils;
 
 namespace KChatManager
 {
     public partial class Main : Form
     {
-        private String kChatFileFolderPath;
+        private String projectFolderPath;
         private String contactFilePath;
+        private String configFileFolderPath;
         private String configFilePath;
         private String picFolderPath;
         private int counter = 0;
+
+        private const String PROJECTNAME = "KChatManager";
 
         public Main()
         {
@@ -28,7 +30,7 @@ namespace KChatManager
 
             TreeNode node = new TreeNode("联系人");
 
-            contactFilePath = kChatFileFolderPath + "Common Files\\contact.xml";
+            contactFilePath = projectFolderPath + "Common Files\\contact.xml";
             if (File.Exists(contactFilePath))
             {
                 XmlDocument contact = new XmlDocument();
@@ -43,28 +45,29 @@ namespace KChatManager
             trvContactList.ExpandAll();
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenFileForm frmOpenFile = new OpenFileForm(kChatFileFolderPath);
-            frmOpenFile.Show();
-        }
-
         private void checkConfigFile()
         {
-            configFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\KChatManager\\config.xml";
+            configFileFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\" + PROJECTNAME;
+            configFilePath = configFileFolderPath + "\\config.xml";
+
             if (!File.Exists(configFilePath))
             {
-                FirstUseForm frmFisrtUse = new FirstUseForm();
-                frmFisrtUse.ShowDialog(); 
+                projectFolderPath = "C:\\" + PROJECTNAME + "\\";
+              
+                String[] eleArray = { "directory", projectFolderPath };
+                //Write Config File
+                new ConfigFileCreator().CreateConfigFile(configFileFolderPath, configFilePath, "config", eleArray);
             }
-
-            readConfigFile();
+            else
+            {
+                readConfigFile();
+            }
         }
 
         private void readConfigFile()
         {
-            kChatFileFolderPath = new ConfigFileParser().parseConfig(configFilePath).Directory;
-            picFolderPath = kChatFileFolderPath + "Common Files\\images\\";
+            projectFolderPath = new ConfigFileParser().parseConfig(configFilePath).Directory;
+            picFolderPath = projectFolderPath + "Common Files\\images\\";
         }
 
         private void trvContactList_AfterSelect(object sender, TreeViewEventArgs e)
@@ -74,7 +77,7 @@ namespace KChatManager
                 panelChatLog.Controls.Clear();
                 counter = 0;
                 int totalHeight = 0;
-                String path = kChatFileFolderPath + trvContactList.SelectedNode.Text + ".kchat";
+                String path = projectFolderPath + trvContactList.SelectedNode.Text + ".kchat";
                 XmlDocument xmlDoc = new XmlDocument();
 
                 try
@@ -99,6 +102,18 @@ namespace KChatManager
                     totalHeight += sc.Height;
                 }
             }
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileForm frmOpenFile = new OpenFileForm(projectFolderPath);
+            frmOpenFile.Show();
+        }
+
+        private void projectFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChangeProjFolderForm frmChangeProjFolder = new ChangeProjFolderForm(projectFolderPath);
+            frmChangeProjFolder.Show();
         }
     }
 }

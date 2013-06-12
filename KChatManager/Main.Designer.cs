@@ -41,6 +41,8 @@
             this.panelChatLog = new System.Windows.Forms.Panel();
             this.dtp = new System.Windows.Forms.DateTimePicker();
             this.ps = new KChatManager.PageSeparator();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.projectFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +51,7 @@
             this.mainMenu.BackColor = System.Drawing.SystemColors.Menu;
             this.mainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.mainMenu.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.mainMenu.Location = new System.Drawing.Point(0, 0);
@@ -147,6 +150,21 @@
             this.ps.Size = new System.Drawing.Size(350, 48);
             this.ps.TabIndex = 4;
             // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.projectFolderToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Text = "&Tools";
+            // 
+            // projectFolderToolStripMenuItem
+            // 
+            this.projectFolderToolStripMenuItem.Name = "projectFolderToolStripMenuItem";
+            this.projectFolderToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.projectFolderToolStripMenuItem.Text = "Project Folder";
+            this.projectFolderToolStripMenuItem.Click += new System.EventHandler(this.projectFolderToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
@@ -186,6 +204,8 @@
         private System.Windows.Forms.Panel panelChatLog;
         private System.Windows.Forms.DateTimePicker dtp;
         private PageSeparator ps;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem projectFolderToolStripMenuItem;
     }
 }
 

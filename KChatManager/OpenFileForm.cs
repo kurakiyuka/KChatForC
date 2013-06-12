@@ -120,7 +120,9 @@ namespace KChatManager
              * <tr><td><div style=padding-left:10px;>&nbsp;</div></td>
              */
             for (int i = 4; i < allWordsArray.Length - 1; i++)
-            {             
+            {
+                String date;
+
                 /*
                  * there are two types of elements: Date and Chat Log
                  * each Chat Log element must begin with a Date element that indicates the following elements' happening time
@@ -128,7 +130,7 @@ namespace KChatManager
                 if (allWordsArray[i].isDate())
                 {
                     //convert date into YYYY-MM-DD format
-                    String date = allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
+                    date = allWordsArray[i].getWordsBetween("日期: ", false, "</td>", false).formatDate();
 
                     String selector = "//day[@day='" + date + "']";
                     if (root.SelectSingleNode(selector) == null)
@@ -211,7 +213,10 @@ namespace KChatManager
                     }
                     msgEle.SetAttribute("fontStyle", fontList.IndexOf(font).ToString());
 
-                    root.LastChild.AppendChild(msgEle);
+                    if (true)
+                    {
+                        root.LastChild.AppendChild(msgEle);
+                    }
                 }//end else
             }//end for
 

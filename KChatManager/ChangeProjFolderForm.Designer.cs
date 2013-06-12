@@ -1,6 +1,6 @@
 ﻿namespace KChatManager
 {
-    partial class FirstUseForm
+    partial class ChangeProjFolderForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,19 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.kChatFileFolder_txt = new System.Windows.Forms.TextBox();
+            this.projectFolder_txt = new System.Windows.Forms.TextBox();
             this.browseKChatFileFolder_btn = new System.Windows.Forms.Button();
             this.saveKChatFileFolder_btn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // kChatFileFolder_txt
+            // projectFolder_txt
             // 
-            this.kChatFileFolder_txt.BackColor = System.Drawing.SystemColors.Window;
-            this.kChatFileFolder_txt.Location = new System.Drawing.Point(24, 45);
-            this.kChatFileFolder_txt.Name = "kChatFileFolder_txt";
-            this.kChatFileFolder_txt.ReadOnly = true;
-            this.kChatFileFolder_txt.Size = new System.Drawing.Size(331, 25);
-            this.kChatFileFolder_txt.TabIndex = 0;
+            this.projectFolder_txt.BackColor = System.Drawing.SystemColors.Window;
+            this.projectFolder_txt.Location = new System.Drawing.Point(24, 45);
+            this.projectFolder_txt.Name = "projectFolder_txt";
+            this.projectFolder_txt.ReadOnly = true;
+            this.projectFolder_txt.Size = new System.Drawing.Size(331, 25);
+            this.projectFolder_txt.TabIndex = 0;
             // 
             // browseKChatFileFolder_btn
             // 
@@ -62,20 +62,21 @@
             this.saveKChatFileFolder_btn.UseVisualStyleBackColor = true;
             this.saveKChatFileFolder_btn.Click += new System.EventHandler(this.saveKChatFileFolder_Click);
             // 
-            // FirstUseForm
+            // ChangeProjFolderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(494, 172);
-            this.ControlBox = false;
             this.Controls.Add(this.saveKChatFileFolder_btn);
             this.Controls.Add(this.browseKChatFileFolder_btn);
-            this.Controls.Add(this.kChatFileFolder_txt);
+            this.Controls.Add(this.projectFolder_txt);
             this.Font = new System.Drawing.Font("Microsoft YaHei", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "FirstUseForm";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "ChangeProjFolderForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Set KChat File Folder";
             this.ResumeLayout(false);
@@ -85,7 +86,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox kChatFileFolder_txt;
+        private System.Windows.Forms.TextBox projectFolder_txt;
         private System.Windows.Forms.Button browseKChatFileFolder_btn;
         private System.Windows.Forms.Button saveKChatFileFolder_btn;
     }
