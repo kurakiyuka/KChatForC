@@ -113,7 +113,13 @@ namespace KChatManager
         private void projectFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeProjFolderForm frmChangeProjFolder = new ChangeProjFolderForm(projectFolderPath);
+            frmChangeProjFolder.Changed += sasa;
             frmChangeProjFolder.Show();
+        }
+
+        private void sasa(Object sender, ChangeProjFolderForm.ChangedEventArgs e)
+        {
+            projectFolderPath = e.projectFolderPath;
         }
     }
 }

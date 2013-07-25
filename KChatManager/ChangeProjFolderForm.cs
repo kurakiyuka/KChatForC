@@ -11,6 +11,26 @@ namespace KChatManager
         private String projectFolderPath;
         private const String PROJECTNAME = "KChatManager";
 
+        public delegate void ChangedEventHandler(Object sender, ChangedEventArgs e);
+        public event ChangedEventHandler Changed;
+
+        public class ChangedEventArgs : EventArgs
+        {
+            public readonly String projectFolderPath;
+            public ChangedEventArgs(String path)
+            {
+                this.projectFolderPath = path;
+            }
+        }
+
+        protected virtual void OnChanged(ChangedEventArgs e)
+        {
+            if (Changed != null)
+            {
+                Changed(this, e);
+            }
+        }
+
         public ChangeProjFolderForm(String path)
         {
             InitializeComponent();
@@ -63,6 +83,8 @@ namespace KChatManager
                     try
                     {
                         xml.Save(configFilePath);
+                        ChangedEventArgs ev = new ChangedEventArgs(projectFolderPath);
+                        OnChanged(ev);
                         this.Close();
                     }
                     catch (IOException ex)
