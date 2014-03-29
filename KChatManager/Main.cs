@@ -21,7 +21,7 @@ namespace KChatManager
 
         public Main()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void Main_Shown(object sender, EventArgs e)
@@ -113,11 +113,11 @@ namespace KChatManager
         private void projectFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeProjFolderForm frmChangeProjFolder = new ChangeProjFolderForm(projectFolderPath);
-            frmChangeProjFolder.Changed += sasa;
+            frmChangeProjFolder.Changed += ProjFolder_Changed;
             frmChangeProjFolder.Show();
         }
 
-        private void sasa(Object sender, ChangeProjFolderForm.ChangedEventArgs e)
+        private void ProjFolder_Changed(Object sender, ChangeProjFolderForm.ChangedEventArgs e)
         {
             projectFolderPath = e.projectFolderPath;
         }
