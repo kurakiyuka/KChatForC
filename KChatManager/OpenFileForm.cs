@@ -11,9 +11,19 @@ namespace KChatManager
 {
     public partial class OpenFileForm : Form
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private String kChatFileFolderPath;
+        /// <summary>
+        /// 
+        /// </summary>
         private String chatFilePath;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
         public OpenFileForm(String path)
         {
             //create contact.xml while opening the OpenFile Dialog first time
@@ -46,6 +56,11 @@ namespace KChatManager
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void browseToChooseChatFile_Click(object sender, EventArgs e)
         {
             OpenFileDialog selectChatFile = new OpenFileDialog();
@@ -58,9 +73,14 @@ namespace KChatManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void createKChatFile_Click(object sender, EventArgs e)
         {
-            String allContent = null;
+            String allContent = String.Empty;
             List<String> fontList = new List<String>();
             XmlDocument resultXML = new XmlDocument();
             XmlElement root;

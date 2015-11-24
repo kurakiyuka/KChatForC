@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChatFile.cs" />
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\ContactList.cs" />
     <Compile Include="ExtensionMethods.cs" />
