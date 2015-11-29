@@ -61,9 +61,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatFile.cs" />
+    <Compile Include="Data\ChatFile.cs" />
     <Compile Include="Data\Config.cs" />
     <Compile Include="Data\ContactList.cs" />
+    <Compile Include="Data\QQMhtFile.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="ChangeProjFolderForm.cs">
       <SubType>Form</SubType>
