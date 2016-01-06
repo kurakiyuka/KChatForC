@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace KChatManager.Data
@@ -13,6 +14,19 @@ namespace KChatManager.Data
         {
             this.content = content;
             this.fileFolderPath = fileFolderPath;
+        }
+
+        /// <summary>
+        /// 使用正则表达式截取字符串中开始和结束字符串中间的字符串
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="startStr"></param>
+        /// <param name="endStr"></param>
+        /// <returns></returns>
+        protected String GetWordsBetween(string source, string startStr, string endStr)
+        {
+            Regex rg = new Regex("(?<=(" + startStr + "))[.\\s\\S]*?(?=(" + endStr + "))", RegexOptions.Multiline | RegexOptions.Singleline);
+            return rg.Match(source).Value;
         }
 
         /// <summary>

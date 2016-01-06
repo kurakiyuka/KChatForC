@@ -20,7 +20,7 @@ namespace KChatManager.Data
 
         public String getContactName()
         {
-            contactName = getWordsBetween(allWordsContent, "消息对象:", true, "</div>", true);
+            contactName = GetWordsBetween(allWordsContent, "消息对象:", "</div>");
             return contactName;
         }
 
